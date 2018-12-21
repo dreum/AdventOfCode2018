@@ -21,7 +21,6 @@ struct GuardDetails
 	unsigned int totalSleep;
 	unsigned int maxMinute;
 };
-
 // puzzle input: https://adventofcode.com/2018/day/4/input
 int main() {
 	tm inputTime;
@@ -30,6 +29,15 @@ int main() {
 	
 	while(cin >> get_time(&inputTime, "[%Y-%m-%d %R]") && getline(cin, note))
 	{
+	/*
+	cout 
+		<< inputTime.tm_year << ' '
+		<< inputTime.tm_mon << ' '
+		<< inputTime.tm_mday << ' '
+		<< inputTime.tm_hour << ' '
+		<< inputTime.tm_min << ' '
+		<< note << '\n';
+	*/
 		auto timeSinceEpoch = mktime(&inputTime);
 		timeNotes.insert({timeSinceEpoch, {inputTime.tm_min, note}});
 	}
@@ -66,8 +74,10 @@ int main() {
 	}
 	
 	map<unsigned int, GuardDetails> allDetails;
+	unsigned int maxTimeId, maxTime{0}, maxTimeIndex;
 	for(auto const& timePlot : timePlots)
 	{
+		//cout << "parsing guard " << timePlot.first << '\n';
 		auto totalSleep = accumulate(
 			cbegin(timePlot.second),
 			cend(timePlot.second),
@@ -81,9 +91,16 @@ int main() {
 			GuardDetails{
 				totalSleep, 
 				distance(timePlot.second.begin(), maxMinute)}});
+				
+		if(*maxMinute > maxTime)
+		{
+			maxTimeId = timePlot.first;
+			maxTime = *maxMinute;
+			maxTimeIndex = distance(timePlot.second.begin(), maxMinute);
+		}
 	}
 	
-	auto chosenGuard = max_element(
+	auto totalSleepGuard = max_element(
 		cbegin(allDetails),
 		cend(allDetails),
 		[](auto const& first, auto const& second)
@@ -92,8 +109,14 @@ int main() {
 		});
 		
 	cout 
-		<< chosenGuard->first << ' '
-		<< chosenGuard->second.maxMinute << ' '
-		<< chosenGuard->first * chosenGuard->second.maxMinute << '\n';
+		<< totalSleepGuard->first << ' '
+		<< totalSleepGuard->second.maxMinute << ' '
+		<< totalSleepGuard->first * totalSleepGuard->second.maxMinute << '\n';
+		
+	cout 
+		<< maxTimeId << ' '
+		<< maxTime << ' '
+		<< maxTimeIndex << ' '
+		<< maxTimeId * maxTimeIndex << '\n';
 	return 0;
 }
