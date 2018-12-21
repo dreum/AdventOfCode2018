@@ -29,15 +29,6 @@ int main() {
 	
 	while(cin >> get_time(&inputTime, "[%Y-%m-%d %R]") && getline(cin, note))
 	{
-	/*
-	cout 
-		<< inputTime.tm_year << ' '
-		<< inputTime.tm_mon << ' '
-		<< inputTime.tm_mday << ' '
-		<< inputTime.tm_hour << ' '
-		<< inputTime.tm_min << ' '
-		<< note << '\n';
-	*/
 		auto timeSinceEpoch = mktime(&inputTime);
 		timeNotes.insert({timeSinceEpoch, {inputTime.tm_min, note}});
 	}
@@ -77,7 +68,6 @@ int main() {
 	unsigned int maxTimeId, maxTime{0}, maxTimeIndex;
 	for(auto const& timePlot : timePlots)
 	{
-		//cout << "parsing guard " << timePlot.first << '\n';
 		auto totalSleep = accumulate(
 			cbegin(timePlot.second),
 			cend(timePlot.second),
